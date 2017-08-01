@@ -117,6 +117,9 @@ Vagrant.configure("2") do |config|
             srv.vm.synced_folder folder["src"], folder["dst"]
           end
         end
+        if node["pre_provision_shell"]
+          srv.vm.provision :shell, inline: node["pre_provision_shell"]
+        end
         case node["provision_type"]
         when 'puppet_agent'
           srv.vm.provision "puppet_server" do |puppet|

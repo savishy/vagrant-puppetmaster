@@ -33,4 +33,7 @@ profiles::puppet::autosign_domains:
 profiles::puppet::hiera_yaml_datadir: "/etc/puppetlabs/code/environments/%%{}{environment}/hieradata"
 profiles::puppet::puppetmaster: puppetmaster.%{::environment}.vagrant
 profiles::puppet::server_foreman_url: https://puppetmaster.%{::environment}.vagrant
+profiles::repositories::purge:
+  'sources.list.d': false
 stacks::bootstrap::puppet: true
+stacks::bootstrap::repos: true
