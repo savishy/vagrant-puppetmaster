@@ -90,3 +90,40 @@
     username: admin
     passwd  : secret
     puppetdb => http://puppetdb.xl.vagrant:8080
+
+## Notes
+
+As of date, running the commands above (from the original repo) does not *quite* work. 
+
+Typically there is a problem at the step that mounts shared folder:
+
+```
+==> puppetmaster: Mounting shared folders...
+    puppetmaster: /tmp/vagrant-cache => C:/Users/savis/work/vagrant-puppetmaster/vagrant/xxs/.vagrant/machines/puppetmaster/cache
+```
+
+Tracing back this failure reveals that Virtualbox Guest Additions could not be installed as a result of which the `vboxsf` mount type could not be found.
+
+```
+An error occurred during installation of VirtualBox Guest Additions 5.1.22. Some functionality may not work as intended.
+In most cases it is OK that the "Window System drivers" installation failed.
+Redirecting to /bin/systemctl start  vboxadd.service
+Job for vboxadd.service failed because the control process exited with error code. See "systemctl status vboxadd.service" and "journalctl -xe" for details.
+```
+
+After a little bit more digging I found that the problem was *kernel-devel version is mismatched with kernel version*.
+
+It could not install the `kernel-devel` package for my `kernel-3.10.0-514`.
+
+```
+No package kernel-devel-3.10.0-514.26.2.el7.x86_64 available.
+```
+
+As a result of the mismatch the Virtualbox Guest Additions could not be installed.
+
+**Solution**
+
+* Get your current Kernel Version `uname -a`
+* `yum update`. 
+* `rpm -qa | grep kernel | sort` and ensure that the latest `kernel` and `kernel-devel` versions are showing.
+* `yum install kernel` and `kernel-devel`.
