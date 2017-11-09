@@ -1,4 +1,4 @@
-# Creating a disposable test environment
+# Puppet Master-Agent Environments
 
 ## Requirements
     Virtualbox                  => https://www.virtualbox.org
@@ -9,6 +9,8 @@
     
 ## Setup
     git submodule update --init
+    
+    :exclamation: Note, this command fetches repositories using SSH, so you will need an SSH key configured in your Github account.
     
 ## Environments
 
@@ -91,7 +93,9 @@
     passwd  : secret
     puppetdb => http://puppetdb.xl.vagrant:8080
 
-## Notes
+## Notes and Troubleshooting
+
+### Issues with Kernel
 
 As of date, running the commands above (from the original repo) does not *quite* work. 
 
@@ -127,3 +131,10 @@ As a result of the mismatch the Virtualbox Guest Additions could not be installe
 * `yum update`. 
 * `rpm -qa | grep kernel | sort` and ensure that the latest `kernel` and `kernel-devel` versions are showing.
 * `yum install kernel` and `kernel-devel`.
+
+### Symlinks in Shared Folders
+There are some symlinks configured in the shared folder which do not appear to get passed through. 
+As a result the provisioning step fails.
+
+This issue:
+https://github.com/hashicorp/vagrant/issues/713#issuecomment-4416384
